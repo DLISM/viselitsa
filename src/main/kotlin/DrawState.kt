@@ -5,28 +5,21 @@ class DrawState {
     private val draw = Draw()
 
     fun start(): String {
-        state++
-        return draw.start()
+        state = 0
+        return draw.getState(state)
     }
 
     fun gameOver(): String {
-        state=0
-        return draw.stepSix()
+        state=6
+        return draw.getState(state)
     }
 
     fun errorStep(): String {
         state++
+        return draw.getState(state)
+    }
 
-        if(state == 1)
-            return draw.stepTwo()
-        if(state == 2)
-            return draw.stepThree()
-        if(state == 3)
-            return draw.stepFour()
-        if(state == 4)
-            return draw.stepFive()
-        else
-            state=0
-            return draw.stepSix()
+    fun state(): String {
+        return draw.getState(state)
     }
 }

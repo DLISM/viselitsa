@@ -85,4 +85,16 @@ class Draw {
             =====
         """.trimIndent()
     }
+
+    fun getState(step: Int): String {
+        return when (step) {
+            0 -> start()
+            1 -> stepOne()
+            2 -> stepTwo()
+            3 -> stepThree()
+            4 -> stepFour()
+            5 -> stepFive()
+            else -> stepSix()
+        }
+    }
 }

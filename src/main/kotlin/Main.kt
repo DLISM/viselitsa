@@ -4,12 +4,13 @@ import java.io.File
 import kotlin.random.Random
 
 fun main() {
-    val words: List<String> = File("words.txt").readLines()
+    val words: List<String> = File("words.txt").readLines().filter { it.isNotBlank() }
 
     while (true) {
         val drawState = DrawState()
         val index: Int = Random.nextInt(0, words.size - 1)
         val currentWord = words[index];
+        val errorLetters = mutableListOf<String>()
 
         val randomSing: Int = Random.nextInt(0, currentWord.length - 1)
         var word = Word(currentWord, randomSing)
@@ -18,17 +19,24 @@ fun main() {
         println(drawState.start())
         println("Слова из ${currentWord.length} букв")
 
-        for (i in 0..tryCount - 1) {
+        while (tryCount > 0 && word.getMask().count() { it == '_' } > 0) {
             println(word.getMask())
-            println("Осталось ${tryCount - i} попиток")
+            println("Осталось ${tryCount} попиток")
             println("\nВведите букву")
             val userSing = input()
             val singInWord: Boolean = word.isInWord(userSing)
             if (singInWord) {
                 word.setFindSing(userSing)
+                tryCount--
             } else {
-                println(drawState.errorStep())
-                println("Такой буквы нету в слове")
+                println("Такой буквы нет в слове")
+                if (!errorLetters.contains(userSing)) {
+                    errorLetters.add(userSing)
+                    println(drawState.errorStep())
+                    tryCount--
+                } else {
+                    println(drawState.state())
+                }
             }
         }
 
@@ -41,7 +49,7 @@ fun main() {
             println("===============================================")
         }
 
-        println("Хотите продолжит игру? ДА/НЕТ")
+        println("Хотите продолжить игру? ДА/НЕТ")
         val continueGame = readln()
         if (continueGame.uppercase() != "ДА") {
             break
@@ -51,14 +59,13 @@ fun main() {
 }
 
 fun input(): String {
-    var userInput = ""
+    var userInput: String
     while (true) {
-        userInput = readln()
-        if (userInput.isEmpty() || userInput.length > 1)
-            println("Введите корректное значение")
-        else
-            break
+        userInput = readln().trim()
+        if (userInput.isEmpty() || userInput.length > 1) {
+            println("Введите корректное значение (одна буква)")
+        } else {
+            return userInput.uppercase()
+        }
     }
-
-    return userInput
 }
