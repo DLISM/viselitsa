@@ -27,6 +27,7 @@ fun main() {
             val singInWord: Boolean = word.isInWord(userSing)
             if (singInWord) {
                 word.setFindSing(userSing)
+                println(drawState.state())
                 tryCount--
             } else {
                 println("Такой буквы нет в слове")
